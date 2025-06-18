@@ -1,0 +1,44 @@
+{
+  "name": "flight-management-system",
+  "version": "1.0.0",
+  "description": "A comprehensive Flight Management System (FMS) designed to automate airline operations—flight scheduling, ticket booking, passenger management, and real-time status tracking",
+  "main": "index.js",
+  "type": "module",
+  "private": "true",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fms-pw/flight-management-system.git"
+  },
+  "keywords": [
+    "pwflights",
+    "fms",
+    "booking",
+    "ticket-booking",
+    "airlines"
+  ],
+  "author": "Kailash Tanya Jakir Laxmi Mayank",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fms-pw/flight-management-system/issues"
+  },
+  "homepage": "https://github.com/fms-pw/flight-management-system#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
