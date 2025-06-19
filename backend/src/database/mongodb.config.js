@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const establishDBConnection = async () => {
   try {
-    const mongoURI = `${process.env.MONGO_DB_URI}/${process.env.DB_NAME}`;
+    const mongoURI = `${process.env.MONGO_DB_URI}`;
     await mongoose.connect(mongoURI);
     console.log(`MongoDB Connection Established
         MongoDBHost : ${process.env.MONGO_DB_URI}
