@@ -1,6 +1,6 @@
 import express from "express";
 
-import establishDBConnection from "./database/mongodb.config.js";
+import { establishDBConnection } from "./database/mongodb.config.js";
 import authRoutes from "./routers/auth.routes.js";
 import userRoutes from "./routers/user.routes.js";
 
@@ -17,7 +17,7 @@ const startServer = async () => {
     const isDBConnected = await establishDBConnection();
 
     if (!isDBConnected) {
-      console.error("\nDatabase connection failed. Aborting server startup");
+      console.error("\nDatabase connection failed. Aborting server startup\n");
       process.exit(1); // Exit the process if the database connection fails
     }
 
