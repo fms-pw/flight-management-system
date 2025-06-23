@@ -13,7 +13,7 @@ if (NodeEnv === "development") {
 }
 
 // Function to establish connection with MongoDB database
-const establishDBConnection = async () => {
+export const establishDBConnection = async () => {
   try {
     // Validate required environment variables
     if (!MONGODB_URI || !DB_NAME || !MONGODB_URI_OPTIONS) {
@@ -33,9 +33,8 @@ const establishDBConnection = async () => {
     // Log error details if connection fails
     console.error(`\nMongoDB Connection Failed!
             ${error.name}
-            ${error.message}\n`);
+            ${error.message}`);
     return false; // Return false if connection fails
   }
 };
-
-export default establishDBConnection;
+export default mongoose;
