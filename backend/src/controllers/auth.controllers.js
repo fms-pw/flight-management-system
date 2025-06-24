@@ -7,3 +7,6 @@ export const login = () => {
 export const logout = () => {
   // user logout controller
 };
+export const forgotUserPassword=()=>{
+
+}

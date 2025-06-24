@@ -9,7 +9,7 @@ const timingSchema = new mongoose.Schema(
     },
     routeId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Route",
+      ref: "FlightRoute",
       required: true,
     },
     departureTime: {
@@ -36,4 +36,5 @@ const timingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Schedule = mongoose.model("Schedule", timingSchema);
+ const Schedule = mongoose.model("Schedule", timingSchema);
+ export default Schedule;

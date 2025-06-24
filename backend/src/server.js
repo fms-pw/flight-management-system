@@ -1,7 +1,7 @@
 import express from "express";
 
 import { establishDBConnection } from "./database/mongodb.config.js";
-import authRoutes from "./routers/auth.routes.js";
+// import authRoutes from "./routers/auth.routes.js";
 import { flightsRouter } from "./routers/flights.routes.js";
 import { fli_compRouters } from "./routers/fli_comp.routes.js";
 import userRoutes from "./routers/user.routes.js";
@@ -12,7 +12,7 @@ server.get("/",(req,res)=>{
 })
 server.use(express.json({ limit: "16kb" }));
 
-server.use("/api/v1/auth", authRoutes);
+// server.use("/api/v1/auth", authRoutes);
 server.use("/api/v1/users", userRoutes);
 server.use("/api/v1/flights", flightsRouter);
 server.use("/api/v1/fli_comp", fli_compRouters);

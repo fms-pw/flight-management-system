@@ -1,6 +1,6 @@
-import { Airport } from "../models/flights&airports/airport.model.js";
-import Route from "../models/flights&airports/route.model.js";
-import { Schedule } from "../models/flights&airports/schedule.model.js";
+import Airport from "../models/airport.model.js";
+import FlightRoute from "../models/route.model.js";
+import Schedule from "../models/schedule.model.js";
 //all controller support bulk entries as below data mostly would be entered in bulk
 
 export async function createAirport(req, res) {
@@ -50,7 +50,7 @@ export async function createRoute(req, res) {
   }
 
   try {
-    const result = await Route.insertMany(routes);
+    const result = await FlightRoute.insertMany(routes);
     return res.status(201).json({ message: "routes created successfully", data: result });
   } catch (err) {
     console.error(err, "in route creation");

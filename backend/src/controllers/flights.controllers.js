@@ -1,4 +1,4 @@
-import { Flight } from "../models/flights&airports/flight.models.js";
+import Flight from "../models/flight.model.js";
 
 export async function createFlight(req, res) {
   let { body } = req;

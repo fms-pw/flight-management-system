@@ -32,5 +32,5 @@ const routeSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-const Route = mongoose.model('Route', routeSchema);
-export default Route;
+const FlightRoute = mongoose.model('FlightRoute', routeSchema);
+export default FlightRoute;
