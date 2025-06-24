@@ -13,6 +13,10 @@ server.get("/",(req,res)=>{
 server.use(express.json({ limit: "16kb" }));
 
 server.use("/api/v1/auth", authRoutes);
+server.use("/api/v1/users", userRoutes);
+server.use("/api/v1/flights", flightsRouter);
+server.use("/api/v1/fli_comp", fli_compRouters);
+
 
 const startServer = async () => {
   try {
