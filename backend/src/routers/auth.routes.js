@@ -1,11 +1,11 @@
-import express from "express";
-import { forgotUserPassword, loginUser, logoutUser, signupUser } from "../controllers/auth.controllers.js";
+// import express from "express";
+// import { forgotUserPassword, loginUser, logoutUser, signupUser } from "../controllers/auth.controllers.js";
 
-const router = express.Router();
+// const router = express.Router();
 
-router.post("/signup", signupUser);
-router.post("/login", loginUser);
-router.post("/logout", logoutUser);
-router.post("/forgot-password", forgotUserPassword);
+// router.post("/signup", signupUser);
+// router.post("/login", loginUser);
+// router.post("/logout", logoutUser);
+// router.post("/forgot-password", forgotUserPassword);
 
-export default router;
+// export default router;

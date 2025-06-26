@@ -1,11 +1,29 @@
+import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import asyncHandler from "express-async-handler";
 import createError from "http-errors";
 
 
+
+
   export const getAllUsers = asyncHandler(async (req, res) => {
+
+      // Get page and limit from query parameters, with defaults
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  
+  // Calculate skip value for pagination
+  const skip = (page - 1) * limit;
+
+  // Get total count of users for pagination metadata
+  const totalUsers = await User.countDocuments();
+
+
+  // Fetch users with pagination
     const users = await User.find()
       .select("-password")
+      .skip(skip) 
+      .limit(limit) 
       .lean(); // Convert to plain JavaScript object for performance
   
     if (!users.length) {
@@ -15,6 +33,9 @@ import createError from "http-errors";
     res.status(200).json({
       success: true,
       count: users.length,
+      total:totalUsers,
+      page: page,
+      totalPages:Math.ceil(totalUsers / limit), 
       data: users,
     });
   });
