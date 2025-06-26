@@ -7,8 +7,8 @@ export async function createFlight(req, res) {
   }
 
   for (const item of body) {
-    const { flightNumber, airline, aircraftType, timing, Status } = item;
-    if (!flightNumber || !airline || !aircraftType || !timing || !Status) {
+    const { flightNumber, airline, aircraftType, route, Status } = item;
+    if (!flightNumber || !airline || !aircraftType || !route || !Status) {
       return res.status(400).json({ message: "Please provide complete flight details" });
     }
   }
@@ -48,7 +48,7 @@ export async function deleteFlight(req, res) {
   const flightId = req.params.id;
 
   try {
-    const flight = await Flight.findByIdAndDelete(flightId); // ✅ Fix here: `findByIdandDelete` ➝ `findByIdAndDelete`
+    const flight = await Flight.findByIdAndDelete(flightId); // 
     if (!flight) {
       return res.status(404).json({ message: "Flight not found" });
     }
@@ -74,7 +74,7 @@ export async function getFlightById(req, res) {
 
 export async function getAllFlights(req, res) {
   try {
-    const flights = await Flight.find({}); // ✅ Fix: You forgot `await`
+    const flights = await Flight.find({}); 
     return res.status(200).json({ message: "Flights fetched", data: flights });
   } catch (err) {
     return res.status(500).json({ message: "Server error", error: err.message });
