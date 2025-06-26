@@ -52,7 +52,7 @@ export async function deleteFlight(req, res) {
     if (!flight) {
       return res.status(404).json({ message: "Flight not found" });
     }
-    res.status(200).json({ message: "Flight deleted", data: flight });
+    res.status(200).json({ message: "Flight deleted" });
   } catch (err) {
     return res.status(500).json({ message: "Server error", error: err.message });
   }
