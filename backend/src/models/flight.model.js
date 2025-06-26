@@ -5,15 +5,10 @@ const flightSchema = new mongoose.Schema(
     flightNumber: { type: String, required: true, unique: true },
     airline: { type: String, required: true },
     aircraftType: { type: String },
-    timing: { type: mongoose.Schema.Types.ObjectId, ref: "Schedule", required: true },
+    route: { type: mongoose.Schema.Types.ObjectId, ref: "FlightRoute", required: true },
     seats: [
       {
-        number: { type: String, required: true ,unique:true},
-        class: {
-          type: String,
-          enum: ["Economy", "Business", "First"],
-          default: "Economy",
-        },
+       type:mongoose.Schema.Types.ObjectId,ref:"Seat"
       },
     ],
 
