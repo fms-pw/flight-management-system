@@ -33,6 +33,8 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, minlength: 8, select: false },
 
     // Optional user details
+    role: { type: String, enum: ["admin", "user"], default: "user" },
+
     profilePicUrl: { type: String, default: null },
 
     address: {
