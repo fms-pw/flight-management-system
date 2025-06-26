@@ -1,6 +1,7 @@
 import Airport from "../models/airport.model.js";
 import FlightRoute from "../models/route.model.js";
 import Schedule from "../models/schedule.model.js";
+import Seat from "../models/seat.model.js";
 //all controller support bulk entries as below data mostly would be entered in bulk
 
 export async function createAirport(req, res) {
@@ -54,6 +55,22 @@ export async function createRoute(req, res) {
     return res.status(201).json({ message: "routes created successfully", data: result });
   } catch (err) {
     console.error(err, "in route creation");
+    return res.status(500).json({ message: "Server error", error: err.message });
+  }
+}
+export async function createSeat(req, res) {
+  const data = req.body;
+
+  const seats = Array.isArray(data) ? data : [data];
+  if (seats.some(({ number, Class,  seatType }) => !number || !Class || !seatType)) {
+    return res.status(400).json({ message: "Please provide complete seat data." });
+  }
+
+  try {
+    const result = await Seat.insertMany(seats);
+    return res.status(201).json({ message: "seats created successfully", data: result });
+  } catch (err) {
+    console.error(err, "in seat creation");
     return res.status(500).json({ message: "Server error", error: err.message });
   }
 }
