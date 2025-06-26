@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { generateJWTtoken } from "../utils/jwt.utils.js";
 
 // Controller to handle user signup
 export const signupUser = async (req, res) => {
@@ -26,16 +27,29 @@ export const signupUser = async (req, res) => {
 
     // Create a new user with the data from the request body
     const newUser = await User.create(req.body);
-    const { _id, firstName, lastName } = newUser;
 
-    // Send success response
+    // Data to encode in the token (payload)
+    const payload = {
+      userId: newUser._id.toString(),
+      email: newUser.email,
+      role: newUser.role,
+    };
+
+    // Log the payload for debugging purposes
+    console.debug("\nPayload for Token Generation ", payload);
+
+    // Generate JWT Token
+    const token = await generateJWTtoken(payload, res);
+
+    // Log the generated token for debugging purposes
+    console.debug("\nGenerated JWT Token at Signup: ", token);
+
     res.status(201).json({
       status: `success`,
-      message: `Congratulation! ${firstName} ${lastName} Your account has been successfully created.`,
-      UserId: _id,
+      message: `Congratulation! ${newUser.firstName} ${newUser.lastName} Your account has been created successfully`,
+      UserId: newUser._id,
     });
   } catch (error) {
-    // Send error response if registration fails
     res.status(500).json({
       status: "User registration failed",
       error: error.name,
@@ -80,16 +94,25 @@ export const loginUser = async (req, res) => {
     // If password does not match, send error
     if (!isPasswordMatch) {
       return res.status(401).json({ message: "Invalid Password" });
-    } else {
-      // Send a success response with a welcome message
-      const { firstName, lastName } = user;
-      res.status(200).json({
-        status: "success",
-        message: `Welcome back, ${firstName} ${lastName}! You have logged in successfully.`,
-      });
     }
+
+    // Data to encode in the token (payload)
+    const payload = {
+      userId: user._id.toString(),
+      email: user.email,
+      role: user.role,
+    };
+    // Generate JWT Token
+    const token = await generateJWTtoken(payload, res);
+
+    // Log the generated token for debugging purposes
+    console.debug("\nGenerated JWT Token at Login: ", token);
+
+    res.status(200).json({
+      status: "success",
+      message: `Welcome back, ${user.firstName}! You have logged in successfully.`,
+    });
   } catch (error) {
-    // Send error response if login fails
     res.status(500).json({
       status: "Something went wrong",
       error: error.name,
