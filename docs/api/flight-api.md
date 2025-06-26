@@ -53,7 +53,7 @@ Content-Type: application/json
 
 ---
 ---
-**2. `PUT http://127.0.0.1:3000/api/v1/flights/createFlight/:id`**
+**2. `PUT http://127.0.0.1:3000/api/v1/flights/updateFlight/:id`**
 ---
 ###  **Headers**
 
