@@ -30,7 +30,7 @@ export async function createSchedule(req, res) {
   const data = req.body;
 
   const schedules = Array.isArray(data) ? data : [data];
-  if (schedules.some(({ flightId, routeId, departureTime, arrivalTime, duration, isRecurring,recurrencePattern }) => !flightId|| !routeId || !departureTime || !arrivalTime || !duration|| !isRecurring|| !recurrencePattern)) {
+  if (schedules.some(({ flightId_A, flightId_B, routeId, departureTime, arrivalTime }) => !flightId_A|| !flightId_B|| !routeId  || !arrivalTime || !departureTime)) {
     return res.status(400).json({ message: "Please provide complete schedule data." });
   }
 

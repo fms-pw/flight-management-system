@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { generateJWTtoken } from "../utils/jwt.utils.js";
 
 // Controller to handle user signup
 export const signupUser = async (req, res) => {
@@ -19,27 +20,40 @@ export const signupUser = async (req, res) => {
 
       // Respond with specific duplicate field message
       return res.status(400).json({
-        status: `failed`,
+        success: false,
         message: `An account already exists with this ${duplicates}`,
       });
     }
 
     // Create a new user with the data from the request body
     const newUser = await User.create(req.body);
-    const { _id, firstName, lastName } = newUser;
 
-    // Send success response
+    // Data to encode in the token
+    const payload = {
+      userId: newUser._id.toString(),
+      email: newUser.email,
+      role: newUser.role,
+    };
+
+    // Log the payload for debugging purposes
+    console.debug("\nPayload for Token Generation \n", payload);
+
+    // Generate JWT Token
+    const token = await generateJWTtoken(payload, res);
+
+    // Log the generated token for debugging purposes
+    console.debug("\nGenerated JWT Token at Signup \n", token);
+
     res.status(201).json({
-      status: `success`,
-      message: `Congratulation! ${firstName} ${lastName} Your account has been successfully created.`,
-      UserId: _id,
+      success: true,
+      message: `Congratulation! ${newUser.firstName} ${newUser.lastName} Your account has been created successfully`,
     });
   } catch (error) {
-    // Send error response if registration fails
     res.status(500).json({
-      status: "User registration failed",
+      success: false,
+      message: "User registration failed",
       error: error.name,
-      message: error.message,
+      details: error.message,
     });
   }
 };
@@ -52,13 +66,14 @@ export const loginUser = async (req, res) => {
     // Allow only one of email or mobileNumber, not both or none
     if ((!email && !mobileNumber) || (email && mobileNumber)) {
       return res.status(400).json({
+        success: false,
         message: "Please provide either email or mobile number, not both.",
       });
     }
 
     // Password is required for login
     if (!password) {
-      return res.status(400).json({ message: "Password is required." });
+      return res.status(400).json({ success: false, message: "Password is required." });
     }
 
     // Find the user by email or mobile number, include password field
@@ -68,7 +83,7 @@ export const loginUser = async (req, res) => {
 
     // If user not found, send error
     if (!user) {
-      return res.status(401).json({ message: "User not found!" });
+      return res.status(401).json({ success: false, message: "User not found!" });
     }
 
     // Retrieve the stored hashed password from the user document
@@ -79,21 +94,31 @@ export const loginUser = async (req, res) => {
 
     // If password does not match, send error
     if (!isPasswordMatch) {
-      return res.status(401).json({ message: "Invalid Password" });
-    } else {
-      // Send a success response with a welcome message
-      const { firstName, lastName } = user;
-      res.status(200).json({
-        status: "success",
-        message: `Welcome back, ${firstName} ${lastName}! You have logged in successfully.`,
-      });
+      return res.status(401).json({ success: false, message: "Invalid Password" });
     }
+
+    // Data to encode in the token (payload)
+    const payload = {
+      userId: user._id.toString(),
+      email: user.email,
+      role: user.role,
+    };
+    // Generate JWT Token
+    const token = await generateJWTtoken(payload, res);
+
+    // Log the generated token for debugging purposes
+    console.debug("\nGenerated JWT Token at Login \n", token);
+
+    res.status(200).json({
+      success: true,
+      message: `Welcome back, ${user.firstName}! You have logged in successfully.`,
+    });
   } catch (error) {
-    // Send error response if login fails
     res.status(500).json({
-      status: "Something went wrong",
+      success: false,
+      message: "User login failed",
       error: error.name,
-      message: error.message,
+      details: error.message,
     });
   }
 };
