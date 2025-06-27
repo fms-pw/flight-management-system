@@ -9,7 +9,7 @@ export const generateJWTtoken = (payload, res) => {
       issuer: "pwflights",          // Token issuer name
       jwtid: uuidv4(),              // Unique token ID for each token
       subject: payload.userId,      // User ID for whom the token is generated
-      expiresIn: "1h",              // Token expiry time (1 hour)
+      expiresIn: "2m",              // Token expiry time (2 minute)
     };
 
     const secretKey = process.env.JWT_SECRET_KEY;
@@ -34,11 +34,13 @@ export const generateJWTtoken = (payload, res) => {
     const cookieOptions = {
       maxAge: 1000 * 60 * 60,         // Cookie valid for 1 hour
       httpOnly: true,                 // Cookie not accessible via JavaScript
-      secure: true,                   // Cookie sent only over HTTPS
+      // secure: true,                   // Cookie sent only over HTTPS
       domain: process.env.DOMAIN,     // Domain for which cookie is valid
       path: "/",                      // Cookie valid for all routes
       sameSite: "None",               // Allow cross-site cookie
     };
+    // Log the cookie Options for debugging Purpose
+    console.debug("Cookie Options : ", cookieOptions);
 
     // Set the JWT token as a cookie in the response
     if (token) {
