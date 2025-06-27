@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+// import User from "../models/user.model.js";
 
 export const getAllUsers = () => {
   // Retrieves the full list of users from the database and returns them as a JSON array.
