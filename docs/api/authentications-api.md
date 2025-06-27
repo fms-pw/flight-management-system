@@ -27,6 +27,7 @@ Content-Type: application/json
   "dateOfBirth": "1999-05-20",
   "gender": "male",
   "password": "Kailash@123!",
+  "role": "admin",
   "address": {
     "street": "Sojat City",
     "city": "Sojat",
