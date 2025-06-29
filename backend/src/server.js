@@ -27,14 +27,13 @@ server.get("/ping", authenticateUser, (req, res) => {
     message: `Ping Pong Ping ! ${req.user?.email} You are Authenticated and working fine.`,
   });
 });
-
+//routes
 server.use("/api/v1/auth", authRoutes);
 server.use("/api/v1/users", userRoutes);
-
 server.use("/api/v1/flights", flightsRouter);
 server.use("/api/v1/fli_comp", fli_compRouters);
 
-// Handle undefined routes with a 404 Not Found response
+// Handling undefined routes with a 404 Not Found response
 server.use((req, res) => {
   res.status(404).json({
     success: false,

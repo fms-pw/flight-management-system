@@ -6,11 +6,11 @@ import { generateJWTtoken } from "../utils/jwt.utils.js";
 export const signupUser = async (req, res) => {
   try {
     const { email, mobileNumber } = req.body;
-    // Check if user already exists with given email or mobile number
+    // Checking if user already exists with given email or mobile number
     const existingUser = await User.findOne({ $or: [{ email }, { mobileNumber }] });
 
     if (existingUser) {
-      // Identify which fields are duplicates
+      //to Identify which fields are duplicates
       const duplicates =
         existingUser.email === email && existingUser.mobileNumber === mobileNumber
           ? `email ${email} and mobile number ${mobileNumber}`
@@ -18,14 +18,14 @@ export const signupUser = async (req, res) => {
           ? `email ${email}`
           : `mobile number ${mobileNumber}`;
 
-      // Respond with specific duplicate field message
+      //to Respond with specific duplicate field message
       return res.status(400).json({
         success: false,
         message: `An account already exists with this ${duplicates}`,
       });
     }
 
-    // Create a new user with the data from the request body
+    // Creating a new user with the data from the request body
     const newUser = await User.create(req.body);
 
     // Data to encode in the token
@@ -35,13 +35,14 @@ export const signupUser = async (req, res) => {
       role: newUser.role,
     };
 
-    // Log the payload for debugging purposes
+    // Logging the payload for debugging purposes
     console.debug("\nPayload for Token Generation \n", payload);
 
-    // Generate JWT Token
+    //To Generate JWT Token
     const token = await generateJWTtoken(payload, res);
 
-    // Log the generated token for debugging purposes
+    //
+    // to Log the generated token for debugging purposes
     console.debug("\nGenerated JWT Token at Signup \n", token);
 
     res.status(201).json({
