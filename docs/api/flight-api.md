@@ -35,7 +35,7 @@ Content-Type: application/json
 **Status:** `201 Created`
 
 ```json
-{ "message": "Flights are inserted successfully", "data": result}
+{"success":true, "message": "Flights are inserted successfully", "data": result}
 
 
 ### ❌ **Error Responses**
@@ -43,12 +43,12 @@ Content-Type: application/json
 **Status:** `409 Bad Request`
 
 ```json
-{ "message": "Duplicate flight code" }
+{"success":false, "message": "Duplicate flight code" }
 
 **Status:** `500 Internal Server Error`
 
 ```json
-{" message": "Server error", "error": "error message" }
+{"success":false," message": "Server error", "error": "error message" }
 ```
 
 ---
@@ -65,7 +65,7 @@ Content-Type: application/json
 ```json
 {
     "flightNumber": "AI101",
-    "airline": "Air India",
+    "success":true,"airline": "Air India",
     "aircraftType": "Boeing 787",
     "route": "685c17e6a65a4e12fb43e4c8",
     
@@ -78,7 +78,7 @@ Content-Type: application/json
 **Status:** `200 Updated`
 
 ```json
-{ "message": "Flight updated", "data": result}
+{"success":true, "message": "Flight updated", "data": result}
 
 
 ### ❌ **Error Responses**
@@ -86,12 +86,12 @@ Content-Type: application/json
 **Status:** `404 Bad Request`
 
 ```json
-{ "message": "Flight not found" }
+{"success":false, "message": "Flight not found" }
 
 **Status:** `500 Internal Server Error`
 
 ```json
-{" message": "Server error", "error": "error message" }
+{"success":false," message": "Server error", "error": "error message" }
 ```
 
 ---
@@ -104,7 +104,7 @@ Content-Type: application/json
 **Status:** `200 deleted`
 
 ```json
-{ "message": "Flight deleted", }
+{"success":true, "message": "Flight deleted", }
 
 
 ### ❌ **Error Responses**
@@ -112,12 +112,12 @@ Content-Type: application/json
 **Status:** `404 Bad Request`
 
 ```json
-{ "message": "Flight not found" }
+{"success":false, "message": "Flight not found" }
 
 **Status:** `500 Internal Server Error`
 
 ```json
-{" message": "Server error", "error": "error message" }
+{"success":false," message": "Server error", "error": "error message" }
 ```
 
 ---
@@ -131,7 +131,7 @@ Content-Type: application/json
 **Status:** `200 Fetched`
 
 ```json
-{ "message": "Flight fetched", "data": flight }
+{"success":true, "message": "Flight fetched", "data": flight }
 
 
 ### ❌ **Error Responses**
@@ -139,12 +139,12 @@ Content-Type: application/json
 **Status:** `404 Bad Request`
 
 ```json
-{ "message": "Flight not found" }
+{"success":false, "message": "Flight not found" }
 
 **Status:** `500 Internal Server Error`
 
 ```json
-{" message": "Server error", "error": "error message" }
+{"success":false," message": "Server error", "error": "error message" }
 ```
 
 ---
@@ -158,7 +158,7 @@ Content-Type: application/json
 **Status:** `200 Fetched`
 
 ```json
-{ "message": "Flights fetched", "data": flights }
+{"success":true, "message": "Flights fetched", "data": flights }
 
 
 ### ❌ **Error Responses**
@@ -167,7 +167,7 @@ Content-Type: application/json
 **Status:** `500 Internal Server Error`
 
 ```json
-{" message": "Server error", "error": "error message" }
+{"success":false," message": "Server error", "error": "error message" }
 ```
 
 ---
