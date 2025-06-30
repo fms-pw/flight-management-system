@@ -21,10 +21,10 @@ server.get("/", (req, res) => {
 });
 
 // Test authenticate middleware using ping route
-server.get("/ping", authenticateUser, (req, res) => {
+server.get("/protected", authenticateUser, (req, res) => {
   return res.status(200).json({
     success: true,
-    message: `Ping Pong Ping ! ${req.user?.email} You are Authenticated and working fine.`,
+    message: `Ping Pong Ping ! You are Authenticated ${req.user?.email} and working fine.`,
   });
 });
 
@@ -38,7 +38,7 @@ server.use("/api/v1/fli_comp", fli_compRouters);
 server.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: "Route not found",
+    message: "404 Route Not Found",
   });
 });
 
