@@ -37,7 +37,7 @@ export const generateJWTtoken = (payload, res) => {
       // secure: true,                   // Cookie sent only over HTTPS
       domain: process.env.DOMAIN,     // Domain for which cookie is valid
       path: "/",                      // Cookie valid for all routes
-      sameSite: "None",               // Allow cross-site cookie
+      sameSite: "None",               //To Allow cross-site cookie
     };
     // Log the cookie Options for debugging Purpose
     console.debug("Cookie Options : ", cookieOptions);
