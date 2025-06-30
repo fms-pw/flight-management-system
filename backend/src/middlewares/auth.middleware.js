@@ -1,40 +1,61 @@
 import jwt from "jsonwebtoken";
 
-// Middleware to authenticate user using JWT
 const authenticateUser = (req, res, next) => {
+  // Get secret key from environment variables
   const secretKey = process.env.JWT_SECRET_KEY;
 
-  // Validate Secret Keys from environment variables
+  // Check if secret key is present
   if (!secretKey) {
     console.error("JWT_SECRET_KEY is not defined");
-    return res.status(500).json({ status: "error", message: "JWT Secret Keys is missing in environment variables" });
+    return res.status(500).json({
+      status: "error",
+      message: "JWT Secret Keys is missing in environment variables",
+    });
   }
 
-  // Retrieve JWT from cookies
+  // Retrieve JWT token from cookies
   const token = req.cookies.jwtAuthToken;
 
-  // JWT token not found in cookies
+  // If token is not found, return unauthorized
   if (!token) {
-    return res.status(401).json({ status: "error", message: "Unauthorized: No token provided" });
+    return res.status(401).json({
+      status: "unauthorized",
+      message: "No token provided, please login first",
+    });
   }
 
   try {
-    // Validate JWT token
-    const verifyJwtToken = jwt.verify(token, secretKey);
+    // Verify the JWT token using the secret key
+    const decodedToken = jwt.verify(token, secretKey);
 
-    // Store decoded user information in request object
-    req.user = verifyJwtToken;
+    // Attach decoded user info to request object for use in next middlewares/routes
+    req.user = decodedToken;
 
-    console.debug("\nDecoded Token \n", verifyJwtToken);
-
-    // Proceed to the next middleware or route handler
+    // Proceed to next middleware or route handler
     next();
   } catch (error) {
-    // Handle invalid or expired JWT token
     console.error("JWT verification failed:", error.name, error.message);
-    res.status(403).json({
-      error: error.name,
-      massage: error.message,
+
+    // Handle expired token
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        status: "failed",
+        message: "Token expired, please login again",
+      });
+    }
+
+    // Handle invalid token
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        status: "failed",
+        message: "Invalid token, authentication failed",
+      });
+    }
+
+    // Handle any other authentication error
+    return res.status(500).json({
+      status: "error",
+      message: "Something went wrong during authentication",
     });
   }
 };
