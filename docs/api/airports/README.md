@@ -52,7 +52,11 @@ Content-Type: application/json
 **Status:** `500 Internal Server Error`
 
 ```json
+<<<<<<< HEAD:docs/api/fli_comp-api.md
 {"success":false," message": "Server error", "error": "error message" }
+=======
+{" message": "Server error", "error": "error message" }
+>>>>>>> feature/kailash-auth:docs/api/airports/README.md
 ````
 
 **2. `POST http://127.0.0.1:3000/api/v1/fli_comp/createRoute`**
@@ -95,10 +99,17 @@ Content-Type: application/json
 **Status:** `500 Internal Server Error`
 
 ```json
+<<<<<<< HEAD:docs/api/fli_comp-api.md
 {"success":false," message": "Server error", "error": "error message" }
 ````
 
 **3. `POST http://127.0.0.1:3000/api/v1/fli_comp/createSchedule`**
+=======
+{" message": "Server error", "error": "error message" }
+````
+
+**4. `POST http://127.0.0.1:3000/api/v1/fli_comp/createSeat`**
+>>>>>>> feature/kailash-auth:docs/api/airports/README.md
 
 ### **Headers**
 
@@ -111,6 +122,7 @@ Content-Type: application/json
 ### **Request Body**
 
 ````json
+<<<<<<< HEAD:docs/api/fli_comp-api.md
 
  {
     "flightId": "685c2d0ee794f0a07ece5577",
@@ -157,6 +169,9 @@ Content-Type: application/json
 
 ````json
 
+=======
+
+>>>>>>> feature/kailash-auth:docs/api/airports/README.md
 {
     "number": "1A",
     "Class": "First",
@@ -181,5 +196,9 @@ Content-Type: application/json
 **Status:** `500 Internal Server Error`
 
 ```json
+<<<<<<< HEAD:docs/api/fli_comp-api.md
 {"success":false," message": "Server error", "error": "error message" }
+=======
+{" message": "Server error", "error": "error message" }
+>>>>>>> feature/kailash-auth:docs/api/airports/README.md
 ````
