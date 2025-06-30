@@ -1,22 +1,27 @@
-## **Flights' components  Apis**
+## **Flights' components Apis**
 
 **Base url:` http://127.0.0.1:3000/api/v1/fli_comp/`**
 
 **Description**
 To add Airport, flight seat,route,schedule
+
 ---
+
 ---
+
 **1. `POST http://127.0.0.1:3000/api/v1/fli_comp/createAirport`**
-###  **Headers**
+
+### **Headers**
 
 ```
 Content-Type: application/json
 ```
+
 ---
 
-###  **Request Body**
+### **Request Body**
 
-```json
+````json
 {
     "name": "Indira Gandhi International Airport",
     "code": "DEL",
@@ -48,18 +53,21 @@ Content-Type: application/json
 
 ```json
 {" message": "Server error", "error": "error message" }
-```
+````
+
 **2. `POST http://127.0.0.1:3000/api/v1/fli_comp/createRoute`**
-###  **Headers**
+
+### **Headers**
 
 ```
 Content-Type: application/json
 ```
+
 ---
 
-###  **Request Body**
+### **Request Body**
 
-```json
+````json
 {
     "origin": "685c1711a65a4e12fb43e4bd",  // DEL - New Delhi
     "destination": "685c1711a65a4e12fb43e4be",  // BOM - Mumbai
@@ -88,25 +96,22 @@ Content-Type: application/json
 
 ```json
 {" message": "Server error", "error": "error message" }
-```
-
-
-
-
-
+````
 
 **4. `POST http://127.0.0.1:3000/api/v1/fli_comp/createSeat`**
-###  **Headers**
+
+### **Headers**
 
 ```
 Content-Type: application/json
 ```
+
 ---
 
-###  **Request Body**
+### **Request Body**
 
-```json
- 
+````json
+
 {
     "number": "1A",
     "Class": "First",
@@ -132,10 +137,4 @@ Content-Type: application/json
 
 ```json
 {" message": "Server error", "error": "error message" }
-```
-
-
-
-
-
-
+````

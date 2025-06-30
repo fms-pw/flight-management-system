@@ -7,25 +7,27 @@ To add new flights, to update existing flights, to get a flight by id, to get al
 
 ---
 
-
 ---
+
 **1. `POST http://127.0.0.1:3000/api/v1/flights/createFlight`**
-###  **Headers**
+
+### **Headers**
 
 ```
 Content-Type: application/json
 ```
+
 ---
 
-###  **Request Body**
+### **Request Body**
 
-```json
+````json
 {
     "flightNumber": "AI101",
     "airline": "Air India",
     "aircraftType": "Boeing 787",
     "route": "685c17e6a65a4e12fb43e4c8",
-    
+
     "Status": "scheduled"
   }
 
@@ -49,30 +51,33 @@ Content-Type: application/json
 
 ```json
 {" message": "Server error", "error": "error message" }
-```
+````
 
 ---
+
 ---
-**2. `PUT http://127.0.0.1:3000/api/v1/flights/updateFlight/:id`**
----
-###  **Headers**
+
+## **2. `PUT http://127.0.0.1:3000/api/v1/flights/updateFlight/:id`**
+
+### **Headers**
 
 ```
 Content-Type: application/json
 ```
-###  **Request Body**
 
-```json
+### **Request Body**
+
+````json
 {
     "flightNumber": "AI101",
     "airline": "Air India",
     "aircraftType": "Boeing 787",
     "route": "685c17e6a65a4e12fb43e4c8",
-    
+
     "Status": "scheduled"
   }
 
- 
+
   ### ✅ **Success Response**
 
 **Status:** `200 Updated`
@@ -92,18 +97,17 @@ Content-Type: application/json
 
 ```json
 {" message": "Server error", "error": "error message" }
-```
+````
 
 ---
-**3. `DELETE http://127.0.0.1:3000/api/v1/flights/deleteFlight/:id`**
----
 
- 
-  ### ✅ **Success Response**
+## **3. `DELETE http://127.0.0.1:3000/api/v1/flights/deleteFlight/:id`**
+
+### ✅ **Success Response**
 
 **Status:** `200 deleted`
 
-```json
+````json
 { "message": "Flight deleted", }
 
 
@@ -118,19 +122,19 @@ Content-Type: application/json
 
 ```json
 {" message": "Server error", "error": "error message" }
-```
+````
 
 ---
----
-**4. `GET http://127.0.0.1:3000/api/v1/flights/getAFlight/:id`**
+
 ---
 
- 
-  ### ✅ **Success Response**
+## **4. `GET http://127.0.0.1:3000/api/v1/flights/getAFlight/:id`**
+
+### ✅ **Success Response**
 
 **Status:** `200 Fetched`
 
-```json
+````json
 { "message": "Flight fetched", "data": flight }
 
 
@@ -145,19 +149,19 @@ Content-Type: application/json
 
 ```json
 {" message": "Server error", "error": "error message" }
-```
+````
 
 ---
----
-**5. `GET http://127.0.0.1:3000/api/v1/flights/getAllFlights`**
+
 ---
 
- 
-  ### ✅ **Success Response**
+## **5. `GET http://127.0.0.1:3000/api/v1/flights/getAllFlights`**
+
+### ✅ **Success Response**
 
 **Status:** `200 Fetched`
 
-```json
+````json
 { "message": "Flights fetched", "data": flights }
 
 
@@ -168,6 +172,6 @@ Content-Type: application/json
 
 ```json
 {" message": "Server error", "error": "error message" }
-```
+````
 
 ---
