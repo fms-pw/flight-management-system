@@ -26,6 +26,7 @@ export const signupUser = async (req, res) => {
     const existingUser = await User.findOne(userParams);
 
     if (existingUser) {
+
       // To find which field is duplicate
       const duplicates =
         existingUser.email === email && existingUser.mobileNumber === mobileNumber

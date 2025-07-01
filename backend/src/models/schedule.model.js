@@ -2,16 +2,12 @@ import mongoose from "mongoose";
 
 const timingSchema = new mongoose.Schema(
   {
-    flightId_A: {
+    flightId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Flight",
       required: true,
     },
-    flightId_B: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Flight",
-      required: true,
-    },
+  
     routeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "FlightRoute",

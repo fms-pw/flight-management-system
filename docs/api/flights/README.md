@@ -37,7 +37,7 @@ Content-Type: application/json
 **Status:** `201 Created`
 
 ```json
-{ "message": "Flights are inserted successfully", "data": result}
+{"success":true, "message": "Flights are inserted successfully", "data": result}
 
 
 ### ❌ **Error Responses**
@@ -45,13 +45,18 @@ Content-Type: application/json
 **Status:** `409 Bad Request`
 
 ```json
-{ "message": "Duplicate flight code" }
+{"success":false, "message": "Duplicate flight code" }
 
 **Status:** `500 Internal Server Error`
 
 ```json
+<<<<<<< HEAD:docs/api/flight-api.md
+{"success":false," message": "Server error", "error": "error message" }
+```
+=======
 {" message": "Server error", "error": "error message" }
 ````
+>>>>>>> feature/kailash-auth:docs/api/flights/README.md
 
 ---
 
@@ -70,7 +75,7 @@ Content-Type: application/json
 ````json
 {
     "flightNumber": "AI101",
-    "airline": "Air India",
+    "success":true,"airline": "Air India",
     "aircraftType": "Boeing 787",
     "route": "685c17e6a65a4e12fb43e4c8",
 
@@ -83,7 +88,7 @@ Content-Type: application/json
 **Status:** `200 Updated`
 
 ```json
-{ "message": "Flight updated", "data": result}
+{"success":true, "message": "Flight updated", "data": result}
 
 
 ### ❌ **Error Responses**
@@ -91,13 +96,18 @@ Content-Type: application/json
 **Status:** `404 Bad Request`
 
 ```json
-{ "message": "Flight not found" }
+{"success":false, "message": "Flight not found" }
 
 **Status:** `500 Internal Server Error`
 
 ```json
+<<<<<<< HEAD:docs/api/flight-api.md
+{"success":false," message": "Server error", "error": "error message" }
+```
+=======
 {" message": "Server error", "error": "error message" }
 ````
+>>>>>>> feature/kailash-auth:docs/api/flights/README.md
 
 ---
 
@@ -107,8 +117,13 @@ Content-Type: application/json
 
 **Status:** `200 deleted`
 
+<<<<<<< HEAD:docs/api/flight-api.md
+```json
+{"success":true, "message": "Flight deleted", }
+=======
 ````json
 { "message": "Flight deleted", }
+>>>>>>> feature/kailash-auth:docs/api/flights/README.md
 
 
 ### ❌ **Error Responses**
@@ -116,13 +131,18 @@ Content-Type: application/json
 **Status:** `404 Bad Request`
 
 ```json
-{ "message": "Flight not found" }
+{"success":false, "message": "Flight not found" }
 
 **Status:** `500 Internal Server Error`
 
 ```json
+<<<<<<< HEAD:docs/api/flight-api.md
+{"success":false," message": "Server error", "error": "error message" }
+```
+=======
 {" message": "Server error", "error": "error message" }
 ````
+>>>>>>> feature/kailash-auth:docs/api/flights/README.md
 
 ---
 
@@ -134,8 +154,13 @@ Content-Type: application/json
 
 **Status:** `200 Fetched`
 
+<<<<<<< HEAD:docs/api/flight-api.md
+```json
+{"success":true, "message": "Flight fetched", "data": flight }
+=======
 ````json
 { "message": "Flight fetched", "data": flight }
+>>>>>>> feature/kailash-auth:docs/api/flights/README.md
 
 
 ### ❌ **Error Responses**
@@ -143,13 +168,18 @@ Content-Type: application/json
 **Status:** `404 Bad Request`
 
 ```json
-{ "message": "Flight not found" }
+{"success":false, "message": "Flight not found" }
 
 **Status:** `500 Internal Server Error`
 
 ```json
+<<<<<<< HEAD:docs/api/flight-api.md
+{"success":false," message": "Server error", "error": "error message" }
+```
+=======
 {" message": "Server error", "error": "error message" }
 ````
+>>>>>>> feature/kailash-auth:docs/api/flights/README.md
 
 ---
 
@@ -161,8 +191,13 @@ Content-Type: application/json
 
 **Status:** `200 Fetched`
 
+<<<<<<< HEAD:docs/api/flight-api.md
+```json
+{"success":true, "message": "Flights fetched", "data": flights }
+=======
 ````json
 { "message": "Flights fetched", "data": flights }
+>>>>>>> feature/kailash-auth:docs/api/flights/README.md
 
 
 ### ❌ **Error Responses**
@@ -171,7 +206,12 @@ Content-Type: application/json
 **Status:** `500 Internal Server Error`
 
 ```json
+<<<<<<< HEAD:docs/api/flight-api.md
+{"success":false," message": "Server error", "error": "error message" }
+```
+=======
 {" message": "Server error", "error": "error message" }
 ````
+>>>>>>> feature/kailash-auth:docs/api/flights/README.md
 
 ---
