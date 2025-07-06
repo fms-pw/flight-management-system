@@ -10,6 +10,7 @@ import { flightsRouter } from "./routers/flights.routes.js";
 import { fli_compRouters } from "./routers/fli_comp.routes.js";
 
 import authenticateUser from "./middlewares/auth.middleware.js";
+import { fli_statusRouter } from "./routers/flights_status.routes.js";
 
 const server = express();
 
@@ -33,6 +34,8 @@ server.use("/api/v1/users", userRoutes);
 
 server.use("/api/v1/flights", flightsRouter);
 server.use("/api/v1/fli_comp", fli_compRouters);
+
+server.use("/api/v1/fli_status", fli_statusRouter);
 
 // Handle undefined routes with a 404 Not Found response
 server.use((req, res) => {
