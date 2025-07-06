@@ -30,7 +30,11 @@ export async function createSchedule(req, res) {
   const data = req.body;
 
   const schedules = Array.isArray(data) ? data : [data];
-  if (schedules.some(({ flightId_A, flightId_B, routeId, departureTime, arrivalTime }) => !flightId_A|| !flightId_B|| !routeId  || !arrivalTime || !departureTime)) {
+  if (
+    schedules.some(
+      ({ flightId_A, flightId_B, routeId, departureTime, arrivalTime }) => !flightId_A || !flightId_B || !routeId || !arrivalTime || !departureTime
+    )
+  ) {
     return res.status(400).json({ message: "Please provide complete schedule data." });
   }
 
@@ -46,7 +50,7 @@ export async function createRoute(req, res) {
   const data = req.body;
 
   const routes = Array.isArray(data) ? data : [data];
-  if (routes.some(({ origin, destination,  routeCode, duration, distance }) => !origin|| !destination ||  !routeCode || !duration || !distance)) {
+  if (routes.some(({ origin, destination, routeCode, duration, distance }) => !origin || !destination || !routeCode || !duration || !distance)) {
     return res.status(400).json({ message: "Please provide complete route data." });
   }
 
@@ -62,7 +66,7 @@ export async function createSeat(req, res) {
   const data = req.body;
 
   const seats = Array.isArray(data) ? data : [data];
-  if (seats.some(({ number, Class,  seatType }) => !number || !Class || !seatType)) {
+  if (seats.some(({ number, Class, seatType }) => !number || !Class || !seatType)) {
     return res.status(400).json({ message: "Please provide complete seat data." });
   }
 

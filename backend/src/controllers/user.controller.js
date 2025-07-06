@@ -3,45 +3,33 @@ import User from "../models/user.model.js";
 import asyncHandler from "express-async-handler";
 import createError from "http-errors";
 
-
-
-
-  export const getAllUsers = asyncHandler(async (req, res) => {
-
-      // Get page and limit from query parameters, with defaults
+export const getAllUsers = asyncHandler(async (req, res) => {
+  // Get page and limit from query parameters, with defaults
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  
+
   // Calculate skip value for pagination
   const skip = (page - 1) * limit;
 
   // Get total count of users for pagination metadata
   const totalUsers = await User.countDocuments();
 
-
   // Fetch users with pagination
-    const users = await User.find()
-      .select("-password")
-      .skip(skip) 
-      .limit(limit) 
-      .lean(); // Convert to plain JavaScript object for performance
-  
-    if (!users.length) {
-      throw createError(404, "No users found");
-    }
-  
-    res.status(200).json({
-      success: true,
-      count: users.length,
-      total:totalUsers,
-      page: page,
-      totalPages:Math.ceil(totalUsers / limit), 
-      data: users,
-    });
+  const users = await User.find().select("-password").skip(skip).limit(limit).lean(); // Convert to plain JavaScript object for performance
+
+  if (!users.length) {
+    throw createError(404, "No users found");
+  }
+
+  res.status(200).json({
+    success: true,
+    count: users.length,
+    total: totalUsers,
+    page: page,
+    totalPages: Math.ceil(totalUsers / limit),
+    data: users,
   });
-
-
-
+});
 
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -51,9 +39,7 @@ export const getUserById = asyncHandler(async (req, res) => {
     throw createError(400, "Invalid user ID");
   }
 
-  const user = await User.findById(id)
-    .select("-password")
-    .lean();
+  const user = await User.findById(id).select("-password").lean();
 
   if (!user) {
     throw createError(404, "User not found");
@@ -65,14 +51,9 @@ export const getUserById = asyncHandler(async (req, res) => {
   });
 });
 
-
-
-
-
 export const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
-
 
   if (!mongoose.isValidObjectId(id)) {
     throw createError(400, "Invalid user ID");
@@ -119,8 +100,6 @@ export const updateUser = asyncHandler(async (req, res) => {
     data: user,
   });
 });
-
-
 
 // Delete a user
 export const deleteUser = asyncHandler(async (req, res) => {

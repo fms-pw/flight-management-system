@@ -1,40 +1,44 @@
 import jwt from "jsonwebtoken";
 
-// Middleware to authenticate user using JWT
 const authenticateUser = (req, res, next) => {
   const secretKey = process.env.JWT_SECRET_KEY;
 
-  // Validate Secret Keys from environment variables
+  //Ensure secret key exists
   if (!secretKey) {
-    console.error("JWT_SECRET_KEY is not defined");
-    return res.status(500).json({ status: "error", message: "JWT Secret Keys is missing in environment variables" });
+    console.error("JWT_SECRET_KEY is not defined in environment variables");
+    return res.status(500).json({
+      status: "error",
+      message: "Server error: JWT secret key is missing",
+    });
   }
 
-  // Retrieve JWT from cookies
-  const token = req.cookies.jwtAuthToken;
+  // Get token from cookies or Authorization header
+  const cookieToken = req.cookies?.jwtAuthToken;
+  const headerToken = req.header("Authorization")?.replace("Bearer ", "");
+  const token = cookieToken || headerToken;
 
-  // JWT token not found in cookies
+  //If no token provided
   if (!token) {
-    return res.status(401).json({ status: "error", message: "Unauthorized: No token provided" });
+    return res.status(401).json({
+      status: "error",
+      message: "Unauthorized: No token provided",
+    });
   }
 
   try {
-    // Validate JWT token
-    const verifyJwtToken = jwt.verify(token, secretKey);
+    // Verify token
+    const decoded = jwt.verify(token, secretKey);
+    req.user = decoded;
 
-    // Store decoded user information in request object
-    req.user = verifyJwtToken;
+    console.debug("JWT verified successfully:", decoded);
 
-    console.debug("\nDecoded Token \n", verifyJwtToken);
-
-    // Proceed to the next middleware or route handler
+    //Proceed to the next middleware handler
     next();
   } catch (error) {
-    // Handle invalid or expired JWT token
     console.error("JWT verification failed:", error.name, error.message);
-    res.status(403).json({
+    return res.status(403).json({
       error: error.name,
-      massage: error.message,
+      message: error.message,
     });
   }
 };
