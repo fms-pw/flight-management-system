@@ -10,6 +10,7 @@ import { flightsRouter } from "./routers/flights.routes.js";
 import { fli_compRouters } from "./routers/fli_comp.routes.js";
 
 import authenticateUser from "./middlewares/auth.middleware.js";
+import authorizeUserRoles from "./middlewares/authorizeRole.middleware.js";
 
 const server = express();
 
@@ -21,10 +22,10 @@ server.get("/", (req, res) => {
 });
 
 // Test authenticate middleware using ping route
-server.get("/protected", authenticateUser, (req, res) => {
+server.get("/protected", authenticateUser, authorizeUserRoles(["admin", "manager"]), (req, res) => {
   return res.status(200).json({
     success: true,
-    message: `Ping Pong Ping ! You are Authenticated ${req.user?.email} and working fine.`,
+    message: `Ping Pong Ping ! You are Authenticated and Authorised ${req.user?.email} and working fine.`,
   });
 });
 //routes
