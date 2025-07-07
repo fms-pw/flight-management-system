@@ -8,7 +8,7 @@ import createError from "http-errors";
 
   export const getAllUsers = asyncHandler(async (req, res) => {
 
-      //To Get page and limit from query parameters, with defaults
+      // Get page and limit from query parameters, with defaults
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   
@@ -24,7 +24,7 @@ import createError from "http-errors";
       .select("-password")
       .skip(skip) 
       .limit(limit) 
-      .lean(); // Converted to plain JavaScript object for performance
+      .lean(); // Convert to plain JavaScript object for performance
   
     if (!users.length) {
       throw createError(404, "No users found");
@@ -46,7 +46,7 @@ import createError from "http-errors";
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  // Validating ObjectId
+  // Validate ObjectId
   if (!mongoose.isValidObjectId(id)) {
     throw createError(400, "Invalid user ID");
   }

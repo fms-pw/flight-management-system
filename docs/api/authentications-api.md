@@ -20,7 +20,7 @@ Content-Type: application/json
 
 ```json
 {
-  "firstName": "Kailash",
+  "firstName": "kailash",
   "lastName": "Parihar",
   "email": "kailashparihar@gmail.com",
   "mobileNumber": "9649352595",
@@ -110,10 +110,10 @@ Content-Type: application/json
   "password": "Laxmi@123!",
   "address": {
     "street": "laxmi Nagar",
-    "city": "Amethi",
-    "district": "Sultanpur",
+    "city": "kanpur",
+    "district": "Lucknow",
     "state": "Uttar Pradesh",
-    "pincode": "227405",
+    "pincode": "226007",
     "country": "india"
   }
 }

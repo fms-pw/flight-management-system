@@ -26,19 +26,21 @@ server.get("/protected", authenticateUser, authorizeUserRoles(["admin", "manager
   return res.status(200).json({
     success: true,
     message: `Ping Pong Ping ! You are Authenticated and Authorised ${req.user?.email} and working fine.`,
+
   });
 });
-//routes
+
 server.use("/api/v1/auth", authRoutes);
 server.use("/api/v1/users", userRoutes);
+
 server.use("/api/v1/flights", flightsRouter);
 server.use("/api/v1/fli_comp", fli_compRouters);
 
-// Handling undefined routes with a 404 Not Found response
+// Handle undefined routes with a 404 Not Found response
 server.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: "404 Route Not Found",
+    message: "Route not found",
   });
 });
 

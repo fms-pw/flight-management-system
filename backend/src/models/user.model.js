@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema(
   {
     // Required user details
     firstName: { type: String, required: true, trim: true, maxlength: 30 },
-
     lastName: { type: String, required: true, trim: true, maxlength: 30 },
 
     email: {
@@ -15,7 +14,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, "Invalid email format"],
-    },
+    }, 
     mobileNumber: {
       type: String,
       required: true,
@@ -35,6 +34,7 @@ const userSchema = new mongoose.Schema(
 
     // Optional user details
 
+
     // Here user means "passenger or end customer"
     role: { type: String, enum: ["admin", "manager", "user"], default: "user" },
 
@@ -52,12 +52,7 @@ const userSchema = new mongoose.Schema(
     bookings: { type: [mongoose.Schema.Types.ObjectId], ref: "Booking", default: [] },
 
     seatPreference: { type: String, enum: ["aisle", "window", "middle"], default: null },
-
     mealPreference: { type: String, enum: ["veg", "non-veg", "eggetarian", "jain", "vegan"], default: null },
-
-    resetPasswordToken: { type: String, default: null },
-
-    resetPasswordTokenExpires: { type: Date, default: null },
 
     isBlocked: { type: Boolean, default: false },
   },
@@ -68,7 +63,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Hash the user's password before saving the user document to the database
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   try {
     // Check if the password field has been modified (or is new)
     if (this.isModified("password")) {
