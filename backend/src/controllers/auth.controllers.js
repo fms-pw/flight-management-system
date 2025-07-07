@@ -1,16 +1,32 @@
-import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateJWTtoken } from "../utils/jwt.utils.js";
+import { v4 as uuidv4 } from "uuid";
+import crypto from "crypto";
 
-// Controller to handle user signup
+import User from "../models/user.model.js";
+import generateToken from "../utils/jwt.utils.js";
+import cookieOptions from "../config/cookie.config.js";
+
+// To handle user signup process
 export const signupUser = async (req, res) => {
   try {
+    // Taking email and mobile number from request body
     const { email, mobileNumber } = req.body;
-    // Check if user already exists with given email or mobile number
-    const existingUser = await User.findOne({ $or: [{ email }, { mobileNumber }] });
+
+    // Making an object to search user in database
+    const userParams = {};
+
+    // To prefer email if user gave it, otherwise using mobile number
+    if (email) {
+      userParams.email = email; // To search user by email
+    } else {
+      userParams.mobileNumber = mobileNumber; // To search user by mobile number
+    }
+
+    // To check if user already exists with same email or mobile number
+    const existingUser = await User.findOne(userParams);
 
     if (existingUser) {
-      // Identify which fields are duplicates
+      // To find which field is duplicate
       const duplicates =
         existingUser.email === email && existingUser.mobileNumber === mobileNumber
           ? `email ${email} and mobile number ${mobileNumber}`
@@ -18,39 +34,35 @@ export const signupUser = async (req, res) => {
           ? `email ${email}`
           : `mobile number ${mobileNumber}`;
 
-      // Respond with specific duplicate field message
-      return res.status(400).json({
-        success: false,
+      // Sending response if user already exists
+      return res.status(409).json({
+        status: "conflict",
         message: `An account already exists with this ${duplicates}`,
       });
     }
 
-    // Create a new user with the data from the request body
+    // To create a new user with given data
     const newUser = await User.create(req.body);
 
-    // Data to encode in the token
+    // Making payload for JWT token
     const payload = {
-      userId: newUser._id.toString(),
       email: newUser.email,
       role: newUser.role,
     };
+    const userId = newUser._id.toString();
 
-    // Log the payload for debugging purposes
-    console.debug("\nPayload for Token Generation \n", payload);
+    // To generate JWT token and set it in cookie
+    await generateToken(payload, userId, res);
 
-    // Generate JWT Token
-    const token = await generateJWTtoken(payload, res);
-
-    // Log the generated token for debugging purposes
-    console.debug("\nGenerated JWT Token at Signup \n", token);
-
+    // Sending success response after signup
     res.status(201).json({
-      success: true,
+      status: "success",
       message: `Congratulation! ${newUser.firstName} ${newUser.lastName} Your account has been created successfully`,
     });
   } catch (error) {
+    // To handle any error during signup
     res.status(500).json({
-      success: false,
+      status: "error",
       message: "User registration failed",
       error: error.name,
       details: error.message,
@@ -58,64 +70,73 @@ export const signupUser = async (req, res) => {
   }
 };
 
-// Controller to handle user login
+// To handle user login process
 export const loginUser = async (req, res) => {
   try {
+    // Taking email, mobile number and password from request body
     const { email, mobileNumber, password } = req.body;
 
-    // Allow only one of email or mobileNumber, not both or none
+    // To allow only one of email or mobile number, not both or none
     if ((!email && !mobileNumber) || (email && mobileNumber)) {
       return res.status(400).json({
-        success: false,
+        status: "failed",
         message: "Please provide either email or mobile number, not both.",
       });
     }
 
-    // Password is required for login
+    // To check if password is given
     if (!password) {
-      return res.status(400).json({ success: false, message: "Password is required." });
+      return res.status(422).json({ status: "failed", message: "Password is required." });
     }
 
-    // Find the user by email or mobile number, include password field
-    const user = await User.findOne({
-      $or: [{ email: email }, { mobileNumber: mobileNumber }],
-    }).select("+password");
+    // Making an object to search user in database
+    const userParams = {};
 
-    // If user not found, send error
+    // To prefer email if user gave it, otherwise using mobile number
+    if (email) {
+      userParams.email = email; // To search user by email
+    } else {
+      userParams.mobileNumber = mobileNumber; // To search user by mobile number
+    }
+
+    // To find user and also select password field
+    const user = await User.findOne(userParams).select("+password");
+
+    // To check if user exists
     if (!user) {
-      return res.status(401).json({ success: false, message: "User not found!" });
+      return res.status(401).json({ status: "failed", message: "User not found!" });
     }
 
-    // Retrieve the stored hashed password from the user document
+    // To get hashed password from user document
     const hashedPassword = user.password;
 
-    // Verify the user-provided password against the stored hash
+    // To compare given password with stored hash
     const isPasswordMatch = await bcrypt.compare(password, hashedPassword);
 
-    // If password does not match, send error
+    // To check if password matched or not
     if (!isPasswordMatch) {
-      return res.status(401).json({ success: false, message: "Invalid Password" });
+      return res.status(401).json({ status: "failed", message: "Invalid Password" });
     }
 
-    // Data to encode in the token (payload)
+    // Making payload for JWT token
     const payload = {
-      userId: user._id.toString(),
       email: user.email,
       role: user.role,
     };
-    // Generate JWT Token
-    const token = await generateJWTtoken(payload, res);
+    const userId = user._id.toString();
 
-    // Log the generated token for debugging purposes
-    console.debug("\nGenerated JWT Token at Login \n", token);
+    // To generate JWT token and set it in cookie
+    await generateToken(payload, userId, res);
 
+    // Sending success response after login
     res.status(200).json({
-      success: true,
+      status: "success",
       message: `Welcome back, ${user.firstName}! You have logged in successfully.`,
     });
   } catch (error) {
+    // To handle any error during login
     res.status(500).json({
-      success: false,
+      status: "error",
       message: "User login failed",
       error: error.name,
       details: error.message,
@@ -123,13 +144,130 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// Controller to handle user logout
-export const logoutUser = () => {
-  // user logout controller
+// To handle user logout process
+export const logoutUser = (_req, res) => {
+  try {
+    // To clear the JWT cookie from browser
+    res.clearCookie("jwtAuthToken", cookieOptions);
+    return res.status(200).json({ status: "success", message: "User logged out successfully" });
+  } catch (error) {
+    // To handle any error during logout
+    return res.status(500).json({
+      status: "failed",
+      message: "Logout failed",
+      error: error.name,
+      details: error.message,
+    });
+  }
 };
 
-// Controller to handle user forgot Password
-export const forgotUserPassword = () => {
-  // user forgot-password controller
+// To handle forgot password request
+export const forgotUserPassword = async (req, res) => {
+  try {
+    // Taking email and mobile number from request body
+    const { email, mobileNumber } = req.body;
+
+    // To allow only one of email or mobile number, not both or none
+    if ((!email && !mobileNumber) || (email && mobileNumber)) {
+      return res.status(400).json({
+        status: "failed",
+        message: "Please provide either email or mobile number, not both.",
+      });
+    }
+    // Making an object to search user in database
+    const userParams = {};
+
+    // To prefer email if user gave it, otherwise using mobile number
+    if (email) {
+      userParams.email = email;
+    } else {
+      userParams.mobileNumber = mobileNumber;
+    }
+
+    // To find user by email or mobile number
+    const user = await User.findOne(userParams);
+
+    // To check if user exists
+    if (!user) {
+      return res.status(404).json({
+        status: "failed",
+        message: `User not found with given email or mobile number.`,
+      });
+    }
+
+    // To generate a random token for password reset
+    const token = uuidv4();
+
+    // To hash the token before saving in database
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    // To save hashed token and expiry time in user document
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordTokenExpires = Date.now() + 1000 * 60 * 60; // Token valid for 1 hour
+    await user.save();
+
+    // Sending response with reset token (in real app, send via email/SMS)
+    return res.status(200).json({
+      status: "success",
+      message: "Password Reset token generated",
+      token: token,
+    });
+  } catch (error) {
+    // To log and handle any error during forgot password
+    console.error("Forgot Password Error:", error);
+
+    return res.status(500).json({
+      status: "error",
+      message: "Unable to process your request at this time. Please try again later.",
+      error: error.name,
+      details: error.message,
+    });
+  }
 };
 
+// To handle password reset using token
+export const resetUserPassword = async (req, res) => {
+  try {
+    // Taking token and new password from request body
+    const { token, newPassword } = req.body;
+
+    // To check if new password is valid
+    if (!newPassword || newPassword.length < 8) {
+      return res.status(400).json({
+        status: "failed",
+        message: "Password must be at least 8 characters long",
+      });
+    }
+
+    // To hash the token for searching in database
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    // To find user with matching reset token and valid expiry
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordTokenExpires: { $gt: Date.now() },
+    });
+
+    // To check if user exists and token is not expired
+    if (!user) {
+      return res.status(400).json({ status: "failed", message: "Invalid or expired token" });
+    }
+    user.password = newPassword;
+
+    // To remove reset token and expiry after successful reset
+    user.resetPasswordToken = null;
+    user.resetPasswordTokenExpires = null;
+    await user.save();
+
+    // Sending success response after password reset
+    return res.status(200).json({ status: "success", message: "Password reset successful" });
+  } catch (error) {
+    // To handle any error during password reset
+    return res.status(500).json({
+      status: "error",
+      message: "Unable to process your request at this time. Please try again later.",
+      error: error.name,
+      details: error.message,
+    });
+  }
+};

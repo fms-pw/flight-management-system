@@ -10,6 +10,7 @@ import { flightsRouter } from "./routers/flights.routes.js";
 import { fli_compRouters } from "./routers/fli_comp.routes.js";
 
 import authenticateUser from "./middlewares/auth.middleware.js";
+import authorizeUserRoles from "./middlewares/authorizeRole.middleware.js";
 import { fli_statusRouter } from "./routers/flights_status.routes.js";
 
 const server = express();
@@ -22,26 +23,25 @@ server.get("/", (req, res) => {
 });
 
 // Test authenticate middleware using ping route
-server.get("/ping", authenticateUser, (req, res) => {
+server.get("/protected", authenticateUser, authorizeUserRoles(["admin", "manager"]), (req, res) => {
   return res.status(200).json({
     success: true,
-    message: `Ping Pong Ping ! ${req.user?.email} You are Authenticated and working fine.`,
+    message: `Ping Pong Ping ! You are Authenticated and Authorised ${req.user?.email} and working fine.`,
   });
 });
-
+//routes
 server.use("/api/v1/auth", authRoutes);
 server.use("/api/v1/users", userRoutes);
-
 server.use("/api/v1/flights", flightsRouter);
 server.use("/api/v1/fli_comp", fli_compRouters);
 
 server.use("/api/v1/fli_status", fli_statusRouter);
 
-// Handle undefined routes with a 404 Not Found response
+// Handling undefined routes with a 404 Not Found response
 server.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: "Route not found",
+    message: "404 Route Not Found",
   });
 });
 
