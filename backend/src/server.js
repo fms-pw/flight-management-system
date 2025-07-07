@@ -5,17 +5,14 @@ import { establishDBConnection } from "./database/mongodb.config.js";
 
 import authRoutes from "./routers/auth.routes.js";
 import userRoutes from "./routers/user.routes.js";
-const bookingRoutes = require('./routers/booking.routes.js');
+
 import { flightsRouter } from "./routers/flights.routes.js";
 import { fli_compRouters } from "./routers/fli_comp.routes.js";
-import cookieParser from "cookie-parser";
 
 import authenticateUser from "./middlewares/auth.middleware.js";
 
 const server = express();
-server.use(express.json());
 
-server.use(cookieParser()); 
 server.use(express.json({ limit: "16kb" }));
 server.use(cookieParser());
 
@@ -33,7 +30,7 @@ server.get("/ping", authenticateUser, (req, res) => {
 
 server.use("/api/v1/auth", authRoutes);
 server.use("/api/v1/users", userRoutes);
-server.use("/api/bookings", bookingRoutes);
+
 server.use("/api/v1/flights", flightsRouter);
 server.use("/api/v1/fli_comp", fli_compRouters);
 
@@ -43,12 +40,6 @@ server.use((req, res) => {
     success: false,
     message: "Route not found",
   });
-});
-
-res.cookie("jwtAuthToken", token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production", 
-  maxAge: 24 * 60 * 60 * 1000, // 1 day
 });
 
 // Function to start the server after a successful database connection
