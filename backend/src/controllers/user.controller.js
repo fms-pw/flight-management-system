@@ -3,17 +3,8 @@ import User from "../models/user.model.js";
 import asyncHandler from "express-async-handler";
 import createError from "http-errors";
 
-<<<<<<< HEAD
 export const getAllUsers = asyncHandler(async (req, res) => {
   // Get page and limit from query parameters, with defaults
-=======
-
-
-
-  export const getAllUsers = asyncHandler(async (req, res) => {
-
-      //To Get page and limit from query parameters, with defaults
->>>>>>> fca5f0c93d2f33608416c23d7172f31d30af6e76
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
 
@@ -24,7 +15,6 @@ export const getAllUsers = asyncHandler(async (req, res) => {
   const totalUsers = await User.countDocuments();
 
   // Fetch users with pagination
-<<<<<<< HEAD
   const users = await User.find().select("-password").skip(skip).limit(limit).lean(); // Convert to plain JavaScript object for performance
 
   if (!users.length) {
@@ -38,33 +28,13 @@ export const getAllUsers = asyncHandler(async (req, res) => {
     page: page,
     totalPages: Math.ceil(totalUsers / limit),
     data: users,
-=======
-    const users = await User.find()
-      .select("-password")
-      .skip(skip) 
-      .limit(limit) 
-      .lean(); // Converted to plain JavaScript object for performance
-  
-    if (!users.length) {
-      throw createError(404, "No users found");
-    }
-  
-    res.status(200).json({
-      success: true,
-      count: users.length,
-      total:totalUsers,
-      page: page,
-      totalPages:Math.ceil(totalUsers / limit), 
-      data: users,
-    });
->>>>>>> fca5f0c93d2f33608416c23d7172f31d30af6e76
   });
 });
 
 export const getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  // Validating ObjectId
+  // Validate ObjectId
   if (!mongoose.isValidObjectId(id)) {
     throw createError(400, "Invalid user ID");
   }

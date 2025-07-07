@@ -24,27 +24,24 @@ server.get("/", (req, res) => {
 });
 
 // Test authenticate middleware using ping route
-server.get("/protected", authenticateUser, (req, res) => {
+server.get("/ping", authenticateUser, (req, res) => {
   return res.status(200).json({
     success: true,
-    message: `Ping Pong Ping ! You are Authenticated ${req.user?.email} and working fine.`,
+    message: `Ping Pong Ping ! ${req.user?.email} You are Authenticated and working fine.`,
   });
 });
-//routes
+
 server.use("/api/v1/auth", authRoutes);
 server.use("/api/v1/users", userRoutes);
-<<<<<<< HEAD
 server.use("/api/bookings", bookingRoutes);
-=======
->>>>>>> fca5f0c93d2f33608416c23d7172f31d30af6e76
 server.use("/api/v1/flights", flightsRouter);
 server.use("/api/v1/fli_comp", fli_compRouters);
 
-// Handling undefined routes with a 404 Not Found response
+// Handle undefined routes with a 404 Not Found response
 server.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: "404 Route Not Found",
+    message: "Route not found",
   });
 });
 

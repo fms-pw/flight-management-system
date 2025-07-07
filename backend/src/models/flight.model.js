@@ -8,8 +8,7 @@ const flightSchema = new mongoose.Schema(
     route: { type: mongoose.Schema.Types.ObjectId, ref: "FlightRoute", required: true },
     seats: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Seat",
+       type:mongoose.Schema.Types.ObjectId,ref:"Seat"
       },
     ],
 
@@ -21,5 +20,5 @@ const flightSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-let Flight = mongoose.model("Flight", flightSchema);
-export default Flight;
+ let Flight = mongoose.model("Flight", flightSchema);
+ export default Flight;
