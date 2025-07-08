@@ -10,14 +10,12 @@ const authorizeUserRoles = (allowedRoles) => {
       });
     }
 
-    // checking for debugging purpose, which roles is captured in allowedRoles from request
-    console.debug(allowedRoles.join(", "));
-
     // check User Roles or Allowed Roles are equalls
     if (!allowedRoles.includes(userRole)) {
       // Access will be denied if the role doesn't match
       return res.status(403).json({
         status: "forbidden",
+        "current roles": userRole,
         message: `Access denied. Required role(s): ${allowedRoles.join(", ")}.`,
       });
     }
