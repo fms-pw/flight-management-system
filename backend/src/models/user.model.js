@@ -55,9 +55,9 @@ const userSchema = new mongoose.Schema(
 
     mealPreference: { type: String, enum: ["veg", "non-veg", "eggetarian", "jain", "vegan"], default: null },
 
-    resetPasswordToken: { type: String, default: null },
+    resetPasswordToken: { type: String, default: null, select: false },
 
-    resetPasswordTokenExpires: { type: Date, default: null },
+    resetPasswordTokenExpires: { type: Date, default: null, select: false },
 
     isBlocked: { type: Boolean, default: false },
   },

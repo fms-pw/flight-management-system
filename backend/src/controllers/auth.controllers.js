@@ -271,3 +271,35 @@ export const resetUserPassword = async (req, res) => {
     });
   }
 };
+
+// Get Logged In User Profile
+export const getMyProfile = async (req, res) => {
+  try {
+    // Extracting user ID from valid token payload
+    const userId = req.user.sub;
+
+    // Getting a complete user object from the database using the user ID
+    const user = await User.findById(userId).lean();
+
+    // If no user is found, return 404 Not Found
+    if (!user) {
+      return res.status(404).json({
+        status: "failed",
+        message: "User not found",
+      });
+    }
+
+    // On success, return user details (excluding sensitive fields as per schema)
+    return res.status(200).json({
+      status: "success",
+      user: user,
+    });
+  } catch (error) {
+    // Log the error internally if needed, then return 500 Internal Server Error
+    return res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      detailed: error.message,
+    });
+  }
+};
