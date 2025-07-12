@@ -10,26 +10,16 @@ import { flightsRouter } from "./routers/flights.routes.js";
 import { fli_compRouters } from "./routers/fli_comp.routes.js";
 import { fli_statusRouter } from "./routers/flights_status.routes.js";
 
-// Import custom middleware for authentication, authorization, and error handling
-import authenticateUser from "./middlewares/auth.middleware.js";
-import authorizeUserRoles from "./middlewares/authorizeRole.middleware.js";
+// Import error handling middleware
 import errorHandler from "./middlewares/errorHandler.middleware.js";
 
 const server = express();
 
 // Parsing incoming JSON requests and cookies
-server.use(express.json({ limit: "16kb" }));
+server.use(express.json({ limit: "32kb" }));
 server.use(cookieParser());
 
 server.get("/", (req, res) => res.status(200).json({ status: "success", message: "OK" }));
-
-// Protected route to test authentication and authorization middleware
-server.get("/protected", authenticateUser, authorizeUserRoles(["admin", "manager"]), (req, res) => {
-  return res.status(200).json({
-    success: true,
-    message: `Ping Pong Ping ! You are Authenticated and Authorised ${req.user?.email} and working fine.`,
-  });
-});
 
 // Registering API routes
 server.use("/api/v1/auth", authRoutes);
