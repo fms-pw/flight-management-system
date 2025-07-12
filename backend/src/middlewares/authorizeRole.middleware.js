@@ -15,8 +15,8 @@ const authorizeUserRoles = (allowedRoles) => {
       // Access will be denied if the role doesn't match
       return res.status(403).json({
         status: "forbidden",
-        "current roles": userRole,
-        message: `Access denied. Required role(s): ${allowedRoles.join(", ")}.`,
+        currentRoles: userRole,
+        message: `Access denied. Required role(s): (${allowedRoles.join(", ")})`,
       });
     }
 
