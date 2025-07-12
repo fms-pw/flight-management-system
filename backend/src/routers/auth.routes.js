@@ -1,5 +1,14 @@
 import express from "express";
-import { forgotUserPassword, getMyProfile, loginUser, logoutUser, resetUserPassword, signupUser } from "../controllers/auth.controllers.js";
+
+import {
+  forgotUserPassword,
+  getMyProfile,
+  loginUser,
+  logoutUser,
+  resetUserPassword,
+  signupUser,
+} from "../controllers/auth.controllers.js";
+
 import authenticateUser from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -12,7 +21,6 @@ router.post("/reset-password", resetUserPassword);
 
 // Authentication middleware applied to all routes below
 router.use(authenticateUser);
-
 
 // Protected routes
 router.post("/logout", logoutUser);
