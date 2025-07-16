@@ -1,145 +1,253 @@
-import mongoose from "mongoose";
 import User from "../models/user.model.js";
-import asyncHandler from "express-async-handler";
-import createError from "http-errors";
+import isValidObjectId from "../utils/objectIdValidator.utils.js";
 
+// Get all users if the role is authorized
+export const getAllUsers = async (req, res) => {
+  try {
+    let users, page, limit, meta, totalPages, hasNextPage, hasPreviousPage;
 
+    // Count total users in the database
+    const totalUsers = await User.countDocuments();
 
+    // Check if query parameters are not provided
+    // Retrieve all users from the database as plain JavaScript objects
+    if (Object.keys(req.query).length == 0) {
+      users = await User.find().lean();
+      meta = { totalUsers: totalUsers };
+    } else {
+      // Get page and limit from query string
+      page = Number(req.query.page);
+      limit = Number(req.query.limit);
 
-  export const getAllUsers = asyncHandler(async (req, res) => {
+      // Calculate total pages based on limit
+      totalPages = Math.ceil(totalUsers / limit);
 
-      //To Get page and limit from query parameters, with defaults
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  
-  // Calculate skip value for pagination
-  const skip = (page - 1) * limit;
+      // Check if next or previous page is available
+      hasNextPage = page < totalPages;
+      hasPreviousPage = page > 1;
 
-  // Get total count of users for pagination metadata
-  const totalUsers = await User.countDocuments();
+      // Validate page and limit values
+      if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+        return res.status(400).json({
+          status: "bad request",
+          message: "Invalid page or limit. Please double-check your input.",
+        });
+      }
 
+      // Calculate offset for pagination format
+      const offset = (page - 1) * limit;
+      if (page > totalPages) {
+        return res.status(400).json({
+          status: "bad request",
+          totalPages: totalPages,
+          message: `Oops! We only have ${totalPages} pages. Please pick a valid one.`,
+        });
+      }
+      if (limit > totalUsers) {
+        return res.status(400).json({
+          status: "bad request",
+          totalUsers: totalUsers,
+          message: `Limit too high! There are only ${totalUsers} users available.`,
+        });
+      }
+      // Retrieve users from the database with pagination
+      users = await User.find().skip(offset).limit(limit).lean();
 
-  // Fetch users with pagination
-    const users = await User.find()
-      .select("-password")
-      .skip(skip) 
-      .limit(limit) 
-      .lean(); // Converted to plain JavaScript object for performance
-  
-    if (!users.length) {
-      throw createError(404, "No users found");
+      // prettier-ignore
+      // Replace meta details if query parameters are present
+      meta = {
+      totalUsers: totalUsers,              // Show total users from database
+      totalPages: totalPages,              // Show total pages based on limit
+      page: page,                          // Show current page from query
+      limit: limit,                        // Show limit from query
+      hasNextPage: hasNextPage,            // Indicate if next page is available
+      hasPreviousPage: hasPreviousPage,    // Indicate if previous page is available
+    };
     }
-  
-    res.status(200).json({
-      success: true,
-      count: users.length,
-      total:totalUsers,
-      page: page,
-      totalPages:Math.ceil(totalUsers / limit), 
+
+    // Send success response after fetching users
+    return res.status(200).json({
+      status: "success",
+      message: "Users fetched successfully",
+      meta: meta,
       data: users,
     });
-  });
-
-
-
-
-export const getUserById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  // Validating ObjectId
-  if (!mongoose.isValidObjectId(id)) {
-    throw createError(400, "Invalid user ID");
+  } catch (error) {
+    // Handle error if something goes wrong
+    return res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
   }
+};
 
-  const user = await User.findById(id)
-    .select("-password")
-    .lean();
+// Getting a user by Id if role is authorised or user is admin
+export const getUserById = async (req, res) => {
+  try {
+    // Taking logged-in user's ID from JWT/session
+    const isLoggedInUserId = req.user.sub;
 
-  if (!user) {
-    throw createError(404, "User not found");
+    // Taking logged-in user's role
+    const isLoggedInUserRole = req.user.role;
+
+    // Taking requested user ID from route parameter
+    const isRequestedUserId = req.params.id;
+
+    // Validating user object id received from route parameters
+    isValidObjectId(isRequestedUserId, res);
+
+    /**
+     * Checking if logged-in user is not admin,
+     * then he can't fetch profile of other users except himself
+     */
+    if (isRequestedUserId !== isLoggedInUserId && isLoggedInUserRole !== "admin") {
+      // Sending forbidden response if permissions are insufficient
+      return res.status(403).json({
+        status: "forbidden",
+        message: "Insufficient permissions to fetch this profile",
+      });
+    }
+
+    // Fetching user data using given query param objectId
+    const user = await User.findById(isRequestedUserId).lean();
+
+    // Checking if user was not found
+    if (!user) {
+      return res.status(404).json({ status: "failed", message: "User not found" });
+    }
+
+    // Sending success response after fetching user
+    return res.status(200).json({
+      status: "success",
+      message: "User fetched successfully",
+      data: user,
+    });
+  } catch (error) {
+    // Handling error if something went wrong
+    return res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
   }
+};
 
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
-});
+// Updating user details using ObjectId
+export const updateUserById = async (req, res) => {
+  try {
+    // Taking logged-in user's ID from JWT/session
+    const isLoggedInUserId = req.user.sub;
 
+    // Taking logged-in user's role
+    const isLoggedInUserRole = req.user.role;
 
+    // Taking requested user ID from route parameter
+    const isRequestedUserId = req.params.id;
 
+    // Validating user object id received from route parameters
+    isValidObjectId(isRequestedUserId, res);
 
+    /**
+     * Checking if logged-in user is not admin,
+     * then he can't update profile of other users except himself
+     */
+    if (isRequestedUserId !== isLoggedInUserId && isLoggedInUserRole !== "admin") {
+      // Sending forbidden response if not allowed to update
+      return res.status(403).json({
+        status: "forbidden",
+        message: "Not allowed to update this profile",
+      });
+    }
 
-export const updateUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const updateData = req.body;
+    // Taking update data from request body
+    const updateData = req.body;
 
+    // Removing sensitive fields from update data
+    delete updateData.password; // Not allowing password update here
+    delete updateData.role; // Not allowing role change
+    delete updateData.isBlocked; // Not allowing block status change
+    delete updateData.bookings; // Not allowing direct bookings modification
 
-  if (!mongoose.isValidObjectId(id)) {
-    throw createError(400, "Invalid user ID");
+    // Listing allowed fields for update
+    const allowedFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "mobileNumber",
+      "dateOfBirth",
+      "gender",
+      "profilePicUrl",
+      "address",
+      "seatPreference",
+      "mealPreference",
+    ];
+
+    // Collecting keys from update data to check what is being updated
+    const updates = Object.keys(updateData);
+
+    // Checking if all update fields are allowed
+    const isValidUpdate = updates.every((field) => allowedFields.includes(field));
+
+    // Sending error response if invalid fields are present
+    if (!isValidUpdate) {
+      return res.status(400).json({
+        status: "failed",
+        message: "Invalid fields in update request",
+      });
+    }
+
+    // Updating user with new data
+    const user = await User.findByIdAndUpdate(
+      isRequestedUserId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).lean();
+
+    // Checking if user was not found
+    if (!user) {
+      return res.status(404).json({ status: "failed", message: "User not found" });
+    }
+
+    // Sending success response after updating user
+    return res.status(200).json({
+      status: "success",
+      data: user,
+    });
+  } catch (error) {
+    // Handling error if something went wrong
+    return res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
   }
+};
 
-  // Prevent updating sensitive fields
-  delete updateData.password; // Disallow password updates through this endpoint
-  delete updateData.role; // Prevent role changes (optional, based on your requirements)
-  delete updateData.isBlocked; // Prevent changing block status
-  delete updateData.bookings; // Prevent direct modification of bookings
+// Deleting a user permanently by ID via authorised role or admin
+export const deleteUser = async (req, res) => {
+  try {
+    // Taking user ID from route parameter
+    const isRequestedUserId = req.params.id;
 
-  // Validate input (optional: add more specific validation as needed)
-  const allowedFields = [
-    "firstName",
-    "lastName",
-    "email",
-    "mobileNumber",
-    "dateOfBirth",
-    "gender",
-    "profilePicUrl",
-    "address",
-    "seatPreference",
-    "mealPreference",
-  ];
-  const updates = Object.keys(updateData);
-  const isValidUpdate = updates.every((update) => allowedFields.includes(update) || update.startsWith("address."));
-  if (!isValidUpdate) {
-    throw createError(400, "Invalid fields in update request");
+    // Validating user object id received from route parameters
+    isValidObjectId(isRequestedUserId, res);
+
+    // Finding user and deleting from database
+    const user = await User.findByIdAndDelete(isRequestedUserId);
+
+    // Checking if user was not found
+    if (!user) {
+      return res.status(404).json({ status: "failed", message: "User not found" });
+    }
+
+    // Sending success response after deleting user
+    res.status(200).json({
+      status: "success",
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    // Handling error if something went wrong
+    return res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
   }
-
-  // Update user with new data
-  const user = await User.findByIdAndUpdate(
-    id,
-    { $set: updateData },
-    { new: true, runValidators: true } // Return updated document, validate schema
-  ).select("-password");
-
-  if (!user) {
-    throw createError(404, "User not found");
-  }
-
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
-});
-
-
-
-// Delete a user
-export const deleteUser = asyncHandler(async (req, res) => {
-  // Permanently deletes a user identified by ID
-  const { id } = req.params;
-
-  // Validate ObjectId
-  if (!mongoose.isValidObjectId(id)) {
-    throw createError(400, "Invalid user ID");
-  }
-
-  const user = await User.findByIdAndDelete(id);
-
-  if (!user) {
-    throw createError(404, "User not found");
-  }
-
-  res.status(200).json({
-    success: true,
-    message: "User deleted successfully",
-  });
-});
+};
