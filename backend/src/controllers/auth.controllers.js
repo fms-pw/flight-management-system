@@ -13,13 +13,13 @@ export const signupUser = async (req, res) => {
     const { email, mobileNumber } = req.body;
 
     // Making an object to search user in database
-    const userParams = {};
+    const userParams = { $or: [] };
 
-    // To prefer email if user gave it, otherwise using mobile number
     if (email) {
-      userParams.email = email; // To search user by email
-    } else {
-      userParams.mobileNumber = mobileNumber; // To search user by mobile number
+      userParams.$or.push({ email }); // To push email in userParams
+    }
+    if (mobileNumber) {
+      userParams.$or.push({ mobileNumber }); // To push mobile numberin userParams
     }
 
     // To check if user already exists with same email or mobile number
