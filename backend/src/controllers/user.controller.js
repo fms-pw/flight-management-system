@@ -39,6 +39,7 @@ export const getAllUsers = async (req, res) => {
       if (page > totalPages) {
         return res.status(400).json({
           status: "bad request",
+          totalUsers: totalUsers,
           totalPages: totalPages,
           message: `Oops! We only have ${totalPages} pages. Please pick a valid one.`,
         });
@@ -47,6 +48,7 @@ export const getAllUsers = async (req, res) => {
         return res.status(400).json({
           status: "bad request",
           totalUsers: totalUsers,
+          totalPages: totalPages,
           message: `Limit too high! There are only ${totalUsers} users available.`,
         });
       }
