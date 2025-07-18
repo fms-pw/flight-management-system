@@ -1,6 +1,6 @@
 import express from "express";
 
-import { deleteUser, getAllUsers, getUserById, updateUserById } from "../controllers/user.controller.js";
+import { deleteUser, getAllUsers, getUserById, updateUserById } from "../controllers/users.controller.js";
 
 import authenticateUser from "../middlewares/auth.middleware.js";
 import authorizeUserRoles from "../middlewares/authorizeRole.middleware.js";
