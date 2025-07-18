@@ -1,6 +1,8 @@
 import express from "express";
+
 import authenticateUser from "../middlewares/auth.middleware.js";
 import authorizeUserRoles from "../middlewares/authorizeRole.middleware.js";
+
 import {
   createFlight,
   deleteFlight,
@@ -18,15 +20,15 @@ router.use(authenticateUser);
 
 router.get("/status/:code", getFlightStatusByCode);
 
-// Authorization applied to all routes below
+// Admin Authorization applied to all routes below
 router.use(authorizeUserRoles(["admin"]));
-
-router.put("/:id/status", updateFlightStatus);
 
 router.post("/", createFlight);
 router.get("/", getAllFlights);
 router.get("/:id", getFlightById);
 router.put("/:id", updateFlightById);
 router.delete("/:id", deleteFlight);
+
+router.put("/:id/status", updateFlightStatus);
 
 export default router;
