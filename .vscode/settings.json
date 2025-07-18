@@ -1,0 +1,28 @@
+// .vscode/settings.json
+// Workspace settings to ensure a consistent editor experience across the team
+{
+  // Themes and icons for visual consistency
+  "workbench.colorTheme": "Monokai Night",
+  "workbench.iconTheme": "material-icon-theme",
+
+  // Auto formatt on save and use Prettier as the default formatter
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Font settings for better readability
+  "editor.fontFamily": "'JetBrains Mono', Consolas, 'Ubuntu Mono', 'Courier New', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "editor.mouseWheelZoom": true,
+
+  // Auto save in background
+  "files.autoSave": "afterDelay",
+
+  // Git Automatically fetch from remote
+  "git.autorefresh": true,
+  "git.autofetch": true,
+
+  // Integrated terminal styling
+  "terminal.integrated.fontFamily": "'JetBrains Mono', Consolas, 'Ubuntu Mono', 'Courier New', monospace",
+  "terminal.integrated.fontLigatures.enabled": true
+}
