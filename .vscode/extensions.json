@@ -1,0 +1,34 @@
+// .vscode/extensions.json
+
+// list of extensions recommendations by @thekailashparihar to every contributors should install for consistent experience
+{
+  "recommendations": [
+    "PKief.material-icon-theme",
+    "fabiospampinato.vscode-monokai-night",
+    "josehidalgo.dark-night",
+
+    "christian-kohler.npm-intellisense",
+    "dsznajder.es7-react-js-snippets",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.code-runner",
+
+    "aaron-bond.better-comments",
+    "oderwat.indent-rainbow",
+
+    "ms-vscode.live-server",
+    "Postman.postman-for-vscode",
+
+    "eamodio.gitlens",
+    "GitHub.vscode-pull-request-github"
+  ],
+
+  // Extensions we prefer contributors NOT to install in this workspace
+  "unwantedRecommendations": []
+}
