@@ -1,33 +1,21 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 
+import apiRouter from "./api/routes.js";
+import errorHandler from "./middlewares/error.middleware.js";
+
 import { establishDBConnection } from "./database/mongodb.config.js";
 
-import authRoutes from "./routers/auth.routes.js";
-import userRoutes from "./routers/user.routes.js";
+export const server = express();
 
-import { flightsRouter } from "./routers/flights.routes.js";
-import { fli_compRouters } from "./routers/fli_comp.routes.js";
-import { fli_statusRouter } from "./routers/flights_status.routes.js";
+// Parse JSON payloads up to 16kb
+server.use(express.json({ limit: "16kb" }));
 
-// Import error handling middleware
-import errorHandler from "./middlewares/errorHandler.middleware.js";
-
-const server = express();
-
-// Parsing incoming JSON requests and cookies
-server.use(express.json({ limit: "32kb" }));
+// Parse cookies on incoming requests
 server.use(cookieParser());
 
-server.get("/", (req, res) => res.status(200).json({ status: "success", message: "OK" }));
-
-// Registering API routes
-server.use("/api/v1/auth", authRoutes);
-server.use("/api/v1/users", userRoutes);
-
-server.use("/api/v1/flights", flightsRouter);
-server.use("/api/v1/fli_comp", fli_compRouters);
-server.use("/api/v1/fli_status", fli_statusRouter);
+// Mount organized API routes at /api/v1
+server.use("/api/v1", apiRouter);
 
 // Handle undefined routes with a 404 response
 server.use((req, res) => {
@@ -37,10 +25,10 @@ server.use((req, res) => {
 // Global error handler middleware
 server.use(errorHandler);
 
-// Function to start the server after establishing a database connection
+// Start server only after database connection is established
 const startServer = async () => {
   try {
-    // Connecting to the database before starting the server
+    // Establish MongoDB connection
     const isDBConnected = await establishDBConnection();
 
     if (!isDBConnected) {
