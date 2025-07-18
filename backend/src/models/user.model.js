@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     // Optional user details
 
     // Here user means "passenger or end customer"
-    role: { type: String, enum: ["admin", "manager", "user"], default: "user" },
+    role: { type: String, enum: ["admin", "manager", "agent", "user"], default: "user" },
 
     profilePicUrl: { type: String, default: null },
 
