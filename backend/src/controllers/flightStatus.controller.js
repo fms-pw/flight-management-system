@@ -11,11 +11,7 @@ export const updateFlightStatus = async (req, res) => {
       return res.status(400).json({ message: "Invalid status value." });
     }
 
-    const flight = await Flight.findByIdAndUpdate(
-      id,
-      { Status: status },
-      { new: true }
-    );
+    const flight = await Flight.findByIdAndUpdate(id, { Status: status }, { new: true });
 
     if (!flight) {
       return res.status(404).json({ message: "Flight not found." });
@@ -36,12 +32,11 @@ export const updateFlightStatus = async (req, res) => {
   }
 };
 
-
 export const getFlightStatusByCode = async (req, res) => {
   try {
-      const { code } = req.params;
+    const { code } = req.params;
 
-      const flight = await Flight.findOne({ flightNumber: code.toUpperCase() });
+    const flight = await Flight.findOne({ flightNumber: code.toUpperCase() });
 
     if (!flight) {
       return res.status(404).json({ message: "Flight not found." });
@@ -58,5 +53,3 @@ export const getFlightStatusByCode = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-

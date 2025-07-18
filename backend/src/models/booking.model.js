@@ -1,0 +1,1 @@
+// schema for storing booking data

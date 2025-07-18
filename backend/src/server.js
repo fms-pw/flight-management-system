@@ -1,46 +1,29 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-
+import apiRouter from "./routes.js";
 import { establishDBConnection } from "./database/mongodb.config.js";
+import notFoundHandler from "./middlewares/notFoundHandler.middleware.js";
+import errorHandler from "./middlewares/error.middleware.js";
 
-import authRoutes from "./routers/auth.routes.js";
-import userRoutes from "./routers/user.routes.js";
+export const server = express();
 
-import { flightsRouter } from "./routers/flights.routes.js";
-import { fli_compRouters } from "./routers/fli_comp.routes.js";
-import { fli_statusRouter } from "./routers/flights_status.routes.js";
+server.use(express.json({ limit: "16kb" }));
 
-// Import error handling middleware
-import errorHandler from "./middlewares/errorHandler.middleware.js";
-
-const server = express();
-
-// Parsing incoming JSON requests and cookies
-server.use(express.json({ limit: "32kb" }));
 server.use(cookieParser());
 
-server.get("/", (req, res) => res.status(200).json({ status: "success", message: "OK" }));
+// Mount all API routes under /api/v1
+server.use("/api/v1", apiRouter);
 
-// Registering API routes
-server.use("/api/v1/auth", authRoutes);
-server.use("/api/v1/users", userRoutes);
+// Handle 404 - Route not found
+server.use(notFoundHandler);
 
-server.use("/api/v1/flights", flightsRouter);
-server.use("/api/v1/fli_comp", fli_compRouters);
-server.use("/api/v1/fli_status", fli_statusRouter);
-
-// Handle undefined routes with a 404 response
-server.use((req, res) => {
-  res.status(404).json({ success: false, message: "404 Route Not Found" });
-});
-
-// Global error handler middleware
+// Global error handler
 server.use(errorHandler);
 
-// Function to start the server after establishing a database connection
+// Start server only after database connection is established
 const startServer = async () => {
   try {
-    // Connecting to the database before starting the server
+    // Establish MongoDB connection
     const isDBConnected = await establishDBConnection();
 
     if (!isDBConnected) {

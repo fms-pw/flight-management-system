@@ -27,7 +27,7 @@ export async function createFlight(req, res) {
   }
 }
 
-export async function updateFlight(req, res) {
+export async function updateFlightById(req, res) {
   const flightId = req.params.id;
   const updateData = req.body;
 
@@ -81,3 +81,10 @@ export async function getAllFlights(req, res) {
     return res.status(500).json({ success: false, message: "Server error", error: err.message });
   }
 }
+
+// export const updateFlightStatus = () => {
+//   // update Flight Status via Admin  (e.g., delayed)
+// };
+// export const getFlightStatusByCode = () => {
+//   // User checks flight status
+// };
