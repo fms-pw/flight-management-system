@@ -7,7 +7,7 @@ import {
   logoutUser,
   resetUserPassword,
   signupUser,
-} from "../controllers/auth.controllers.js";
+} from "../controllers/auth.controller.js";
 
 import authenticateUser from "../middlewares/auth.middleware.js";
 
