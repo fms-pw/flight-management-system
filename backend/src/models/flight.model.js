@@ -1,25 +1,65 @@
-import mongoose from "mongoose";
+import mongoose from "../database/mongodb.config.js";
 
 const flightSchema = new mongoose.Schema(
   {
-    flightNumber: { type: String, required: true, unique: true },
-    airline: { type: String, required: true },
-    aircraftType: { type: String },
-    route: { type: mongoose.Schema.Types.ObjectId, ref: "FlightRoute", required: true },
+    flightNumber: { type: String, required: true, unique: true, trim: true },
+    airline: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Airline",
+      required: true,
+    },
+    departureAirport: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Airport",
+      required: true,
+    },
+    arrivalAirport: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Airport",
+      required: true,
+    },
+    departureTime: { type: Date, required: true },
+    arrivalTime: { type: Date, required: true },
     seats: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Seat",
+        seatNumber: {
+          type: String,
+          required: true,
+          unique: true,
+        },
+        seatType: {
+          type: String,
+          enum: ["Economy", "Premium Economy", "Business", "First Class"],
+          required: true,
+          trim: true,
+        },
+        totalSeats: {
+          type: Number,
+          required: true,
+        },
+        availableSeats: {
+          type: Number,
+          required: true,
+        },
+        seatPrice: {
+          type: Number,
+          required: true,
+        },
       },
     ],
-
-    Status: {
+    status: {
       type: String,
-      enum: ["scheduled", "delayed", "cancelled", "departed", "landed"],
-      default: "scheduled",
+      required: true,
+      enum: ["Scheduled", "Delayed", "Cancelled", "Boarding", "Departed", "Landed"],
+      default: "Scheduled",
+      trim: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    minimize: false,
+  }
 );
-let Flight = mongoose.model("Flight", flightSchema);
+
+const Flight = mongoose.model("Flight", flightSchema);
 export default Flight;
