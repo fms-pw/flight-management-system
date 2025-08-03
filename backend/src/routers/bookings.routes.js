@@ -2,11 +2,11 @@ import express from "express";
 import authenticateUser from "../middlewares/auth.middleware.js";
 import authorizeUserRoles from "../middlewares/authorizeRole.middleware.js";
 import {
-  cancelBooking,
-  createBooking,
-  getAllBookings,
-  getMyBookings,
-  rescheduleBooking,
+    cancelBooking,
+    createBooking,
+    getAllBookings,
+    getMyBookings,
+    rescheduleBooking,
 } from "../controllers/bookings.controller.js";
 
 const router = express.Router();
