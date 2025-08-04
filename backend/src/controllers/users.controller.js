@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import isValidObjectId from "../utils/objectIdValidator.utils.js";
+import isValidObjectId from "../utils/objectIdValidator.js";
 
 // Get all users if the role is authorized
 export const getAllUsers = async (req, res) => {
