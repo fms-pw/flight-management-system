@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import crypto from "crypto";
 
 import User from "../models/user.model.js";
-import generateToken from "../utils/jwt.utils.js";
+import generateToken from "../middlewares/jwt.middleware.js";
 import cookieOptions from "../config/cookie.config.js";
 
 // To handle user signup process
