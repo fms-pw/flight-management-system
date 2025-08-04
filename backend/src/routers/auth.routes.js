@@ -1,12 +1,12 @@
 import express from "express";
 
 import {
-  forgotUserPassword,
-  getMyProfile,
-  loginUser,
-  logoutUser,
-  resetUserPassword,
-  signupUser,
+    forgotUserPassword,
+    getMyProfile,
+    loginUser,
+    logoutUser,
+    resetUserPassword,
+    signupUser,
 } from "../controllers/auth.controller.js";
 
 import authenticateUser from "../middlewares/auth.middleware.js";

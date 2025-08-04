@@ -1,10 +1,19 @@
 import mongoose from "../database/mongodb.config.js";
 
-const airportSchema = new mongoose.Schema(
+const airlineSchema = new mongoose.Schema(
     {
-        name: { type: String, required: true, trim: true },
+        name: { type: String, required: true, unique: true, trim: true, index: true },
 
         iataCode: {
+            type: String,
+            required: true,
+            unique: true,
+            uppercase: true,
+            minlength: 2,
+            maxlength: 3,
+            trim: true,
+        },
+        icaoCode: {
             type: String,
             required: true,
             unique: true,
@@ -13,22 +22,14 @@ const airportSchema = new mongoose.Schema(
             maxlength: 4,
             trim: true,
         },
-        icaoCode: {
-            type: String,
-            unique: true,
-            uppercase: true,
-            minlength: 3,
-            maxlength: 4,
-            trim: true,
-            default: null,
-        },
 
-        city: { type: String, required: true, trim: true },
-        country: { type: String, required: true, trim: true },
+        country: { type: String, required: true, trim: true, index: true },
+        logoUrl: { type: String, trim: true, default: null },
 
-        terminals: {
-            type: Number,
-            min: [1, "At least one terminal is required"],
+        contact: {
+            number: { type: String, trim: true, default: null },
+            email: { type: String, lowercase: true, match: /.+\@.+\..+/, default: null },
+            website: { type: String, match: /^https?:\/\/.+/, default: null },
         },
 
         // Audit Fields
@@ -49,5 +50,5 @@ const airportSchema = new mongoose.Schema(
     }
 );
 
-const Airport = mongoose.model("Airport", airportSchema);
-export default Airport;
+const Airline = mongoose.model("Airline", airlineSchema);
+export default Airline;
